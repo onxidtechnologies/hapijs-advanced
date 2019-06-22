@@ -28,6 +28,7 @@ export class LoginController {
                             id: user._id,
                             email: user.email,
                             name: user.name,
+                            scope: user.role,
                             exp: Math.floor(Date.now() / 1000) + expirationTime
                         };
 

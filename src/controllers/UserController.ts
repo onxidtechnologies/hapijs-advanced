@@ -11,11 +11,11 @@ export class UserController extends BaseController {
 
     public getRouteList(): any[] {
         return [
-            this.addEntityRoute(), 
-            this.getAllEntitiesRoute(), 
-            this.getEntityByIdRoute(), 
-            this.updateEntityByIdRoute(), 
-            this.deleteEntityByIdRoute()
+            this.addEntityRoute(['admin']), 
+            this.getAllEntitiesRoute(['admin', 'user']), 
+            this.getEntityByIdRoute(['admin', 'user']), 
+            this.updateEntityByIdRoute(['admin', 'user']), 
+            this.deleteEntityByIdRoute(['admin'])
         ];
     }
 }
