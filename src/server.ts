@@ -1,13 +1,14 @@
-import { Server } from 'hapi';
+import { Server } from '@hapi/hapi';
 import * as mongoose from 'mongoose';
 import { UserController } from './controllers/UserController';
+const config = require('./config');
 
 export class APIServer {
     private server: Server;
 
     constructor() {
         mongoose.connect(
-            'mongodb://demo:demo123@ds237669.mlab.com:37669/hapijs-advanced',
+            `mongodb://${config.db.user}:${config.db.password}@${config.db.host}:${config.db.port}/${config.db.name}`,
             { useNewUrlParser: true }
         );
 
@@ -24,16 +25,16 @@ export class APIServer {
         // Create a server with a host and port
         this.server = Server({
             host: 'localhost',
-            port: 8000
+            port: config.app.port
         });
 
         // Add the route
         this.server.route({
             method: 'GET',
-            path: '/hello',
+            path: '/',
             handler: function (request, h) {
 
-                return 'hello world';
+                return 'Hapi.js Advanced API Serving...';
             }
         });
 
