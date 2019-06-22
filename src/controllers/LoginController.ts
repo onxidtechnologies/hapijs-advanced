@@ -17,7 +17,19 @@ export class LoginController {
                 method: 'POST',
                 path: '/login',
                 config: {
-                    auth: false
+                    auth: false,
+                    description: 'Endpoint used for login and receiving the authentication token',
+                    notes: 'Endpoint used for login and receiving the authentication token',
+                    tags: ['api', 'v1'],
+                    plugins: {
+                        'hapi-swagger': {
+                            responses: {
+                                '200': {
+                                    description: 'Success'
+                                }
+                            }
+                        }
+                    }
                 },
                 handler: async (request, h) => {
                     const user = await User.findOne({email: request.payload.email});
