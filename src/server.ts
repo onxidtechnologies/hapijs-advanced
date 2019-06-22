@@ -1,6 +1,8 @@
 import { Server } from '@hapi/hapi';
 import * as mongoose from 'mongoose';
 import { UserController } from './controllers/UserController';
+import { LoginController } from './controllers/LoginController';
+import { User } from './models/userModel';
 const config = require('./config');
 
 export class APIServer {
@@ -28,6 +30,16 @@ export class APIServer {
             port: config.app.port
         });
 
+        await this.server.register(require('hapi-auth-jwt2'));
+
+        this.server.auth.strategy('jwt', 'jwt', {
+            key: 'privateKey123',
+            validate: this.validate,
+            verifyOptions: {
+                algorithms: ['HS256']
+            }
+        });
+
         // Add the route
         this.server.route({
             method: 'GET',
@@ -41,6 +53,9 @@ export class APIServer {
         const userController = new UserController();
         this.server.route(userController.getRouteList());
 
+        const loginController = new LoginController();
+        this.server.route(loginController.getRouteList());
+
         try {
             await this.server.start();
         }
@@ -50,5 +65,15 @@ export class APIServer {
         }
 
         console.log('Server running at:', this.server.info.uri);
+    }
+
+    private validate = async function (decoded, request, h) {
+        const user = await User.findById(decoded.id);
+
+        if (user) {
+            return { isValid: true };
+        }
+
+        return { isValid: false };
     }
 }
