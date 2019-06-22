@@ -30,7 +30,12 @@ export class APIServer {
             port: config.app.port
         });
 
-        await this.server.register(require('hapi-auth-jwt2'));
+        await this.server.register([
+            require('hapi-auth-jwt2'),
+            require('@hapi/inert'),
+            require('@hapi/vision'),
+            require('hapi-swagger')
+        ]);
 
         this.server.auth.strategy('jwt', 'jwt', {
             key: 'privateKey123',
